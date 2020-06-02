@@ -6,13 +6,25 @@ local gamestate = {}
 function love.load()
   gameplay = require("src.gameplay")
   gamestate.phrase = gameplay.selectPhrase()
+  gamestate.state = "start"
+  gamestate.timer = gameplay.calculateTime(gamestate.phrase)
   gamestate.typed = ""
+
+  love.keyboard.setKeyRepeat(true)
 end
  
 function love.draw()
-  love.graphics.printf(gamestate.phrase, 0, 0, love.graphics.getWidth())
-  love.graphics.printf(gamestate.typed, 0, 50, love.graphics.getWidth())
-  if gamestate.state == 'score' then
+  if gamestate.state == "start" then
+    love.graphics.printf('Press enter to start the game!', 0, love.graphics.getHeight() - 100, love.graphics.getWidth(), "center")
+  end
+
+  if gamestate.state == "game" then
+    love.graphics.printf(gamestate.phrase, 0, 0, love.graphics.getWidth())
+    love.graphics.printf(gamestate.typed, 0, 50, love.graphics.getWidth())
+    love.graphics.printf("Timer: " .. string.format("%.2f", gamestate.timer), 400, 0, love.graphics.getWidth())
+  end
+
+  if gamestate.state == "score" then
     if gamestate.result then
       love.graphics.printf("Alright!", 0, 100, love.graphics.getWidth())
     else
@@ -21,20 +33,38 @@ function love.draw()
   end
 end
 
+function love.update(dt)
+  if gamestate.state == "game" then
+    if gamestate.timer > 0 then
+      gamestate.timer = gamestate.timer - dt
+    else
+      gamestate.state = "score"
+    end
+  end
+end
+
 function love.keypressed(key)
   if key == "backspace" then
     -- get the byte offset to the last UTF-8 character in the string.
     local byteoffset = utf8.offset(gamestate.typed, -1)
-
     if byteoffset then
       -- remove the last UTF-8 character.
       -- string.sub operates on bytes rather than UTF-8 characters, so we couldn't do string.sub(text, 1, -2).
       gamestate.typed = string.sub(gamestate.typed, 1, byteoffset - 1)
     end
   end
+
   if key == "return" then
-    gamestate.result = gameplay.checkWords(gamestate.typed, gamestate.phrase)
-    gamestate.state = 'score'
+    if gamestate.state == "game" then
+      gamestate.result = gameplay.checkWords(gamestate.typed, gamestate.phrase)
+      gamestate.state = "score"    
+    end
+    if gamestate.state == "start" then
+      gamestate.state = "game"
+      gamestate.phrase = gameplay.selectPhrase()
+      gamestate.timer = gameplay.calculateTime(gamestate.phrase)
+      gamestate.typed = ""
+    end
   end
 end
 
