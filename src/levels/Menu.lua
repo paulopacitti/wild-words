@@ -1,21 +1,27 @@
 local Menu = {}
-local Button = require("src.objects.Button")
+local TextInput = require("src.objects.TextInput")
 local Text = require("src.objects.Text")
-
 
 function Menu:init()
   title = Text:new({x = 200, y = 100}, "title", "Wild Words")
-  sampleButton = Button:new({x = 400, y = 300 }, "Play!")
+  option = TextInput:new({x = 0, y = (600 / 2) + 20 })
 end
 
-function Menu.draw()
+function Menu:draw()
   love.graphics.setColor(10/255, 46/255, 68/255)
   love.graphics.setBackgroundColor(252/255, 255/255, 204/255, 1)
   title:draw()
-  sampleButton:draw()
+  option:draw()
 end
 
-function Menu:keyreleased(key, code)
+function Menu:keypressed(key)
+  if key == "backspace" then
+    option:delete()
+  end
+end
+
+function Menu:textinput(t)
+  option:append(t)
 end
 
 return Menu
