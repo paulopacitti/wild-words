@@ -9,7 +9,6 @@ function Text:initialize(position, type, alignment, text)
 end
 
 function Text:selectFont(type)
-  print(type)
   local font
   local size
   if type == "title" then

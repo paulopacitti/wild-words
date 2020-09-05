@@ -1,12 +1,17 @@
+local utf8 = require("utf8")
+local SoundSystem = require("src.systems.SoundSystem")
 local class = require("libs.middleclass")
 local TextInput = class("TextInput")
-local utf8 = require("utf8")
 
 function TextInput:initialize(position)
   self.position = position
   self.text = ""
   self.font = love.graphics.newFont("assets/fonts/VGATypewriterSf.ttf", 45)
   self.cursor = " "
+  self.sfx = SoundSystem:new()
+  self.sfx:add("typing1", "assets/sfx/typing1.wav")
+  self.sfx:add("typing2", "assets/sfx/typing2.wav")
+  self.sfx:add("typing3", "assets/sfx/typing3.wav")
 end
 
 function TextInput:getText()
@@ -17,8 +22,13 @@ function TextInput:setText(t)
   self.text = t
 end
 
+function TextInput:setSFX()
+  return { wave:newSource("typing1.wav"), }
+end
+
 function TextInput:append(char)
   self.text = self.text .. string.lower(char)
+  self.sfx:playRandom()
 end
 
 function TextInput:delete()
@@ -28,6 +38,7 @@ function TextInput:delete()
       -- remove the last UTF-8 character.
       -- string.sub operates on bytes rather than UTF-8 characters, so we couldn't do string.sub(text, 1, -2).
       self.text = string.sub(self.text, 1, byteoffset - 1)
+      self.sfx:play("typing1")
     end
 end
 
