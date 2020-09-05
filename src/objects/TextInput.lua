@@ -5,7 +5,8 @@ local utf8 = require("utf8")
 function TextInput:initialize(position)
   self.position = position
   self.text = ""
-  self.font = love.graphics.newFont("assets/fonts/m41.ttf", 20)
+  self.font = love.graphics.newFont("assets/fonts/VGATypewriterSf.ttf", 45)
+  self.cursor = " "
 end
 
 function TextInput:getText()
@@ -17,7 +18,7 @@ function TextInput:setText(t)
 end
 
 function TextInput:append(char)
-  self.text = self.text .. char
+  self.text = self.text .. string.lower(char)
 end
 
 function TextInput:delete()
@@ -30,10 +31,17 @@ function TextInput:delete()
     end
 end
 
+function TextInput:updateCursor()
+  if self.cursor == " " then
+    self.cursor = "_"
+  else
+    self.cursor = " "
+  end
+end
+
 function TextInput:draw()
   love.graphics.setFont(self.font)
-  love.graphics.printf(self.text, self.position.x, self.position.y, 800, "center")
-
+  love.graphics.printf(">" .. self.text .. self.cursor, self.position.x, self.position.y, 800)
 end
 
 return TextInput

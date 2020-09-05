@@ -3,8 +3,10 @@ local TextInput = require("src.objects.TextInput")
 local Text = require("src.objects.Text")
 
 function Menu:init()
-  title = Text:new({x = 200, y = 100}, "title", "Wild Words")
-  option = TextInput:new({x = 0, y = (600 / 2) + 20 })
+  seconds = 0
+  title = Text:new({x = 0, y = 100}, "title", "center", "Wild\nWords")
+  footer = Text:new({x = 0, y = 550}, "label", "center", "made by paulopacitti")
+  option = TextInput:new({x = 330, y = 330})
 end
 
 function Menu:draw()
@@ -12,6 +14,15 @@ function Menu:draw()
   love.graphics.setBackgroundColor(252/255, 255/255, 204/255, 1)
   title:draw()
   option:draw()
+  footer:draw()
+end
+
+function Menu:update(dt)
+  seconds = seconds + dt
+  if seconds >= 0.5 then
+    option:updateCursor()
+    seconds = 0
+  end
 end
 
 function Menu:keypressed(key)

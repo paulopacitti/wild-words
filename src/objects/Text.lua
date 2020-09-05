@@ -1,9 +1,9 @@
 local class = require("libs.middleclass")
 local Text = class("Text")
 
-function Text:initialize(position, type, text)
+function Text:initialize(position, type, alignment, text)
   self.font = self:selectFont(type, size)
-  print(self.font)
+  self.alignment = alignment
   self.position = position -- {x, y}
   self.text = text
 end
@@ -16,8 +16,8 @@ function Text:selectFont(type)
     font = "pixel-bit-advanced"
     size = 60
   elseif type == "label" then
-    font = "m41"
-    size = 30
+    font = "VGATypewriter"
+    size = 15
   end
   return love.graphics.newFont("assets/fonts/" .. font .. ".ttf", size)
 end
@@ -27,7 +27,7 @@ end
 
 function Text:draw()
   love.graphics.setFont(self.font)
-  love.graphics.printf("Wild Words", 0, ((600 / 2) - (self.font:getHeight() / 2)) - 100, 800, "center")
+  love.graphics.printf(self.text, self.position.x, self.position.y, 800, self.alignment)
 
 end
 
