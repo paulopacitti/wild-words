@@ -1,5 +1,6 @@
-local wave = require("libs.wave")
 local class = require("libs.middleclass")
+local fun = require("libs.fun")
+local wave = require("libs.wave")
 local SoundSystem = class("SoundSystem")
 
 function SoundSystem:initialize()
@@ -14,10 +15,19 @@ function SoundSystem:play(tag)
   self.sounds[tag]:play()
 end
 
-function SoundSystem:playRandom()
+-- tags: a table containing the sounds to play randomly
+function SoundSystem:playRandom(tags)
   math.randomseed(os.time())
   local keys = {}
-  for k in pairs(self.sounds) do table.insert(keys, k) end
+  for k, v in pairs(self.sounds) do
+    if tags ~= nil then
+      if fun.index(k, tags) ~= nil then -- check if key is in "tags"
+        table.insert(keys, k) 
+      end
+    else
+      table.insert(keys, k) 
+    end
+  end
   local index = keys[math.random(#keys)]
   self.sounds[index]:play()
 end

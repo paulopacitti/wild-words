@@ -28,7 +28,7 @@ end
 
 function TextInput:append(char)
   self.text = self.text .. string.lower(char)
-  self.sfx:playRandom()
+  self.sfx:playRandom({"typing2", "typing3"})
 end
 
 function TextInput:delete()
@@ -38,10 +38,11 @@ function TextInput:delete()
       -- remove the last UTF-8 character.
       -- string.sub operates on bytes rather than UTF-8 characters, so we couldn't do string.sub(text, 1, -2).
       self.text = string.sub(self.text, 1, byteoffset - 1)
-      self.sfx:play("typing1")
+      self.sfx:play("typing1") -- "delete" sound
     end
 end
 
+-- function that makes the cursor blink
 function TextInput:updateCursor()
   if self.cursor == " " then
     self.cursor = "_"
