@@ -6,7 +6,7 @@ local TextInput = class("TextInput")
 function TextInput:initialize(position)
   self.position = position
   self.text = ""
-  self.font = love.graphics.newFont("assets/fonts/VGATypewriterSf.ttf", 45)
+  self.font = love.graphics.newFont("assets/fonts/VGATypewriterSf.ttf", 40)
   self.cursor = " "
   self.sfx = SoundSystem:new()
   self.sfx:add("typing1", "assets/sfx/typing1.wav")
@@ -53,7 +53,7 @@ end
 
 function TextInput:draw()
   love.graphics.setFont(self.font)
-  love.graphics.printf(">" .. self.text .. self.cursor, self.position.x, self.position.y, 800)
+  love.graphics.printf(self.text .. self.cursor, self.position.x, self.position.y, 780, "center")
 end
 
 return TextInput

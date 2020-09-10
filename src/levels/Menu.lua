@@ -1,13 +1,15 @@
 local Menu = {}
-local SoundSystem = require("src.systems.SoundSystem")
+local Gamestate = require("libs.gamestate")
 local TextInput = require("src.objects.TextInput")
 local Text = require("src.objects.Text")
+local SoundSystem = require("src.systems.SoundSystem")
+local Duel = require("src.levels.Duel")
 
 function Menu:init()
   seconds = 0
   title = Text:new({x = 0, y = 100}, "title", "center", "Wild\nWords")
   footer = Text:new({x = 0, y = 550}, "label", "center", "made by paulopacitti")
-  option = TextInput:new({x = 330, y = 330})
+  option = TextInput:new({x = 0, y = 330})
   sfx = SoundSystem:new()
   sfx:add("shot2", "assets/sfx/shot2.wav")
 end
@@ -33,6 +35,7 @@ function Menu:keypressed(key)
     option:delete()
   elseif key == "return" then
     sfx:play("shot2")
+    Gamestate.switch(Duel)
   end
 end
 

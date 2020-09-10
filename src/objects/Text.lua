@@ -15,8 +15,11 @@ function Text:selectFont(type)
     font = "pixel-bit-advanced"
     size = 60
   elseif type == "label" then
-    font = "VGATypewriter"
+    font = "VGATypewriterSf"
     size = 15
+  elseif type == "phrase" then
+    font = "VGATypewriterSf"
+    size = 30
   end
   return love.graphics.newFont("assets/fonts/" .. font .. ".ttf", size)
 end
@@ -27,7 +30,6 @@ end
 function Text:draw()
   love.graphics.setFont(self.font)
   love.graphics.printf(self.text, self.position.x, self.position.y, 800, self.alignment)
-
 end
 
 return Text
