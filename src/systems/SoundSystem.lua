@@ -7,8 +7,9 @@ function SoundSystem:initialize()
   self.sounds = {}
 end
 
-function SoundSystem:add(tag, file)
+function SoundSystem:add(tag, file, loop)
   self.sounds[tag] = wave:newSource(file, "stream")
+  self.sounds[tag]:setLooping(loop)
 end
 
 function SoundSystem:play(tag)

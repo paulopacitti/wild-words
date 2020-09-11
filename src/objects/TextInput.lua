@@ -9,9 +9,9 @@ function TextInput:initialize(position)
   self.font = love.graphics.newFont("assets/fonts/VGATypewriterSf.ttf", 40)
   self.cursor = " "
   self.sfx = SoundSystem:new()
-  self.sfx:add("typing1", "assets/sfx/typing1.wav")
-  self.sfx:add("typing2", "assets/sfx/typing2.wav")
-  self.sfx:add("typing3", "assets/sfx/typing3.wav")
+  self.sfx:add("typing1", "assets/sfx/typing1.wav", false)
+  self.sfx:add("typing2", "assets/sfx/typing2.wav", false)
+  self.sfx:add("typing3", "assets/sfx/typing3.wav", false)
 end
 
 function TextInput:getText()

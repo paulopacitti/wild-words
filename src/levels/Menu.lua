@@ -11,7 +11,7 @@ function Menu:init()
   footer = Text:new({x = 0, y = 550}, "label", "center", "made by paulopacitti")
   option = TextInput:new({x = 0, y = 330})
   sfx = SoundSystem:new()
-  sfx:add("shot2", "assets/sfx/shot2.wav")
+  sfx:add("shot2", "assets/sfx/shot2.wav", false)
 end
 
 function Menu:draw()

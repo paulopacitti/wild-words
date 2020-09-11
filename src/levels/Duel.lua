@@ -8,7 +8,7 @@ local SoundSystem = require("src.systems.SoundSystem")
 function Duel:init()
   gameplaySystem = GameplaySystem:new()
   sfx = SoundSystem:new()
-  sfx:add("shot2", "assets/sfx/shot2.wav")
+  sfx:add("shot2", "assets/sfx/shot2.wav", false)
 
   phrase = Text:new({x = 0, y = 50}, "phrase", "center", gameplaySystem:getPhrase())
   typewriter = TextInput:new({x = 0, y = 450})
@@ -37,11 +37,16 @@ function Duel:draw()
 end
 
 function Duel:update(dt)
-  seconds = seconds + dt
-  timer = timer - dt
-  if seconds >= 0.5 then
-    typewriter:updateCursor()
-    seconds = 0
+  if state == "reloading" then
+    seconds = seconds + dt
+    timer = timer - dt
+    if seconds >= 0.5 then
+      typewriter:updateCursor()
+      seconds = 0
+    end
+    if timer <= 0 then
+      state = "lost"
+    end
   end
 end
 
@@ -66,12 +71,12 @@ function Duel:keypressed(key)
 end
 
 function restart()
+  seconds = 0
+  gameplaySystem:selectPhrase()
+  timer = gameplaySystem:calculateTime()
   phrase = Text:new({x = 0, y = 50}, "phrase", "center", gameplaySystem:getPhrase())
   typewriter = TextInput:new({x = 0, y = 450})
-
   state = "reloading"
-  seconds = 0
-  timer = gameplaySystem:calculateTime()
 end
 
 function Duel:textinput(t)
