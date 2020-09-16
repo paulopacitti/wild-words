@@ -1,17 +1,27 @@
 local Menu = {}
 local Gamestate = require("libs.gamestate")
+
 local TextInput = require("src.objects.TextInput")
 local Text = require("src.objects.Text")
+
 local SoundSystem = require("src.systems.SoundSystem")
+
 local Duel = require("src.levels.Duel")
+local Credits = require("src.levels.Credits")
+
 
 function Menu:init()
   seconds = 0
   title = Text:new({x = 0, y = 100}, "title", "center", "Wild\nWords")
-  footer = Text:new({x = 0, y = 550}, "label", "center", "made by paulopacitti")
+  footer = Text:new({x = 0, y = 550}, "footer", "center", "paulopacitti.itch.io")
   option = TextInput:new({x = 0, y = 330})
   sfx = SoundSystem:new()
   sfx:add("shot2", "assets/sfx/shot2.wav", false)
+end
+
+-- when re-entering the level, start from scratch
+function Menu:resume()
+  Menu:init()
 end
 
 function Menu:draw()
@@ -34,8 +44,13 @@ function Menu:keypressed(key)
   if key == "backspace" then
     option:delete()
   elseif key == "return" then
-    sfx:play("shot2")
-    Gamestate.switch(Duel)
+    if option:getText() == "play" then
+      sfx:play("shot2")
+      Gamestate.push(Duel)
+    elseif option:getText() == "credits" then
+      sfx:play("shot2")
+      Gamestate.push(Credits)
+    end
   end
 end
 

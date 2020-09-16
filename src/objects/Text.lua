@@ -12,12 +12,18 @@ function Text:selectFont(type)
   local font
   local size
   if type == "title" then
-    font = "pixel-bit-advanced"
-    size = 60
-  elseif type == "label" then
+    font = "UpheavalPro"
+    size = 100
+  elseif type == "footer" then
     font = "VGATypewriterSf"
     size = 15
   elseif type == "phrase" then
+    font = "VGATypewriterSf"
+    size = 30
+  elseif type == "credits_title" then
+    font = "UpheavalPro"
+    size = 40
+  elseif type == "credits_label" then
     font = "VGATypewriterSf"
     size = 30
   end

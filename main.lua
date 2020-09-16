@@ -1,4 +1,4 @@
-local Gamestate = require "libs.gamestate"
+local Gamestate = require("libs.gamestate")
 local Menu = require("src.levels.Menu")
 local SoundSystem = require("src.systems.SoundSystem")
 
