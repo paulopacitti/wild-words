@@ -1,16 +1,21 @@
-local class = require("libs.middleclass")
-local Text = class("Text")
+local Text = {}
 
-function Text:initialize(position, type, alignment, text)
-  self.font = self:selectFont(type, size)
-  self.alignment = alignment
-  self.position = position -- {x, y}
-  self.text = text
+function Text:new(position, type, alignment, text)
+  local o = {
+    font = self:selectFont(type),
+    alignment = alignment,
+    position = position, -- {x, y}
+    text = text,
+  }
+  setmetatable(o, self)
+  self.__index = self
+  return o
 end
 
 function Text:selectFont(type)
   local font
   local size
+
   if type == "title" then
     font = "UpheavalPro"
     size = 100
@@ -27,10 +32,8 @@ function Text:selectFont(type)
     font = "VGATypewriterSf"
     size = 30
   end
-  return love.graphics.newFont("assets/fonts/" .. font .. ".ttf", size)
-end
 
-function Text:onClick()
+  return love.graphics.newFont("assets/fonts/" .. font .. ".ttf", size)
 end
 
 function Text:draw()
