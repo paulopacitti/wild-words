@@ -1,10 +1,14 @@
-local class = require("libs.middleclass")
 local fun = require("libs.fun")
 local wave = require("libs.wave")
-local SoundSystem = class("SoundSystem")
+local SoundSystem = {}
 
-function SoundSystem:initialize()
-  self.sounds = {}
+function SoundSystem:new()
+  local o = {
+    sounds = {}
+  }
+  setmetatable(o, self)
+  self.__index = self
+  return o
 end
 
 function SoundSystem:add(tag, file, loop)
@@ -23,10 +27,10 @@ function SoundSystem:playRandom(tags)
   for k, v in pairs(self.sounds) do
     if tags ~= nil then
       if fun.index(k, tags) ~= nil then -- check if key is in "tags"
-        table.insert(keys, k) 
+        table.insert(keys, k)
       end
     else
-      table.insert(keys, k) 
+      table.insert(keys, k)
     end
   end
   local index = keys[math.random(#keys)]
