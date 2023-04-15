@@ -1,5 +1,5 @@
 local utf8 = require("utf8")
-local SoundSystem = require("src.systems.SoundSystem")
+local Audio = require("src.components.Audio")
 local TextInput = {}
 
 function TextInput:new(position)
@@ -8,7 +8,7 @@ function TextInput:new(position)
     text = "",
     font = love.graphics.newFont("assets/fonts/VGATypewriterSf.ttf", 40),
     cursor = " ",
-    sfx = SoundSystem:new(),
+    sfx = Audio:new(),
   }
   setmetatable(o, self)
   self.__index = self
@@ -28,9 +28,10 @@ function TextInput:setText(t)
   self.text = t
 end
 
-function TextInput:setSFX()
-  return { wave:newSource("typing1.wav"), }
-end
+-- unused code
+-- function TextInput:setSFX()
+--   return { wave:newSource("typing1.wav"), }
+-- end
 
 function TextInput:append(char)
   self.text = self.text .. string.lower(char)

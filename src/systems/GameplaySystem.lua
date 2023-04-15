@@ -1,4 +1,4 @@
-local words = require("src.utils.words")
+local words = require("assets.words")
 local GameplaySystem = {}
 
 function GameplaySystem:new()
@@ -39,4 +39,5 @@ function GameplaySystem:selectPhrase()
   self.phrase = self.words[index]
 end
 
-return GameplaySystem
+local system = GameplaySystem:new();
+return system

@@ -1,11 +1,11 @@
 local Gamestate = require("libs.gamestate")
 local Menu = require("src.levels.Menu")
-local SoundSystem = require("src.systems.SoundSystem")
+local Audio = require("src.components.Audio")
 
 function love.load()
   love.keyboard.setKeyRepeat(true)
 
-  local music = SoundSystem:new()
+  local music = Audio:new()
   music:add("theme", "assets/music/theme.wav", true)
   music:play("theme")
 

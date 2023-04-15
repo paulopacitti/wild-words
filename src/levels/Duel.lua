@@ -1,86 +1,83 @@
-local Duel = {}
-local Gamestate = require("libs.gamestate")
-local Text = require("src.objects.Text")
-local TextInput = require("src.objects.TextInput")
 local GameplaySystem = require("src.systems.GameplaySystem")
-local SoundSystem = require("src.systems.SoundSystem")
+local Text = require("src.components.Text")
+local TextInput = require("src.components.TextInput")
+local Audio = require("src.components.Audio")
 
+local Duel = {}
 function Duel:init()
-  gameplaySystem = GameplaySystem:new()
-  sfx = SoundSystem:new()
-  sfx:add("shot2", "assets/sfx/shot2.wav", false)
+  self.sfx = Audio:new()
+  self.sfx:add("shot2", "assets/sfx/shot2.wav", false)
 
-  phrase = Text:new({x = 0, y = 50}, "phrase", "center", gameplaySystem:getPhrase())
-  typewriter = TextInput:new({x = 0, y = 450})
+  self.phrase = Text:new({ x = 0, y = 50 }, "phrase", "center", GameplaySystem:getPhrase())
+  self.typewriter = TextInput:new({ x = 0, y = 450 })
 
-  state = "reloading"
-  seconds = 0
-  timer = gameplaySystem:calculateTime()
+  self.state = "reloading"
+  self.seconds = 0
+  self.timer = GameplaySystem:calculateTime()
+end
+
+function Duel:restart()
+  self.seconds = 0
+  GameplaySystem:selectPhrase()
+  self.timer = GameplaySystem:calculateTime()
+  self.phrase = Text:new({ x = 0, y = 50 }, "phrase", "center", GameplaySystem:getPhrase())
+  self.typewriter = TextInput:new({ x = 0, y = 450 })
+  self.state = "reloading"
 end
 
 function Duel:draw()
-  if timer > 0 and state == "reloading" then 
-    love.graphics.setColor(10/255, 46/255, 68/255, 0.5)
-    love.graphics.setBackgroundColor(252/255, 255/255, 204/255, 1)
-    phrase:draw()
+  if self.timer > 0 and self.state == "reloading" then
+    love.graphics.setColor(10 / 255, 46 / 255, 68 / 255, 0.5)
+    love.graphics.setBackgroundColor(252 / 255, 255 / 255, 204 / 255, 1)
+    self.phrase:draw()
 
-    love.graphics.printf(string.format("%.2f", timer), 0, 400, 800, "center")
+    love.graphics.printf(string.format("%.2f", self.timer), 0, 400, 800, "center")
 
-    love.graphics.setColor(10/255, 46/255, 68/255)
-    typewriter:draw()
-  elseif state == "win" then
+    love.graphics.setColor(10 / 255, 46 / 255, 68 / 255)
+    self.typewriter:draw()
+  elseif self.state == "win" then
     love.graphics.printf("YOU WIN", 0, 400, 800, "center")
-  elseif state == "lost" then
+  elseif self.state == "lost" then
     love.graphics.printf("GAME OVER", 0, 400, 800, "center")
   end
-
 end
 
 function Duel:update(dt)
-  if state == "reloading" then
-    seconds = seconds + dt
-    timer = timer - dt
-    if seconds >= 0.5 then
-      typewriter:updateCursor()
-      seconds = 0
+  if self.state == "reloading" then
+    self.seconds = self.seconds + dt
+    self.timer = self.timer - dt
+    if self.seconds >= 0.5 then
+      self.typewriter:updateCursor()
+      self.seconds = 0
     end
-    if timer <= 0 then
-      state = "lost"
+    if self.timer <= 0 then
+      self.state = "lost"
     end
   end
 end
 
 function Duel:keypressed(key)
-  if state == "reloading" then
+  if self.state == "reloading" then
     if key == "backspace" then
-      typewriter:delete()
+      self.typewriter:delete()
     end
     if key == "return" then
-      sfx:play("shot2")
-      if gameplaySystem:check(typewriter:getText()) then
-        state = "win"
+      self.sfx:play("shot2")
+      if GameplaySystem:check(self.typewriter:getText()) then
+        self.state = "win"
       else
-        state = "lost"
+        self.state = "lost"
       end
     end
-  elseif state == "win" or "lost" then
+  elseif self.state == "win" or "lost" then
     if key == "return" then
-      restart()
+      Duel:restart()
     end
-  end 
-end
-
-function restart()
-  seconds = 0
-  gameplaySystem:selectPhrase()
-  timer = gameplaySystem:calculateTime()
-  phrase = Text:new({x = 0, y = 50}, "phrase", "center", gameplaySystem:getPhrase())
-  typewriter = TextInput:new({x = 0, y = 450})
-  state = "reloading"
+  end
 end
 
 function Duel:textinput(t)
-  typewriter:append(t)
+  self.typewriter:append(t)
 end
 
 return Duel
