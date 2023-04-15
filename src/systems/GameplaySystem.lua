@@ -1,10 +1,20 @@
-local class = require("libs.middleclass")
-local GameplaySystem = class("GameplaySystem")
+local words = require("src.utils.words")
+local GameplaySystem = {}
+
+function GameplaySystem:new()
+  local o = {
+    words = words,
+    phrase = " ",
+  }
+  setmetatable(o, self)
+  self.__index = self
+
+  o:selectPhrase()
+  return o
+end
 
 function GameplaySystem:initialize()
-  self.words = require("src.utils.words")
-  self.phrase = " "
-  self:selectPhrase()
+
 end
 
 function GameplaySystem:calculateTime()
