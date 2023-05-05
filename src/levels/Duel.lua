@@ -2,6 +2,9 @@ local GameplaySystem = require("src.systems.GameplaySystem")
 local Text = require("src.components.Text")
 local TextInput = require("src.components.TextInput")
 local Audio = require("src.components.Audio")
+local Enemy = require("src.entities.Enemy")
+
+local sprites = require("assets.sprites.index")
 
 local Duel = {}
 function Duel:init()
@@ -10,6 +13,13 @@ function Duel:init()
 
   self.phrase = Text:new({ x = 0, y = 50 }, "phrase", "center", GameplaySystem:getPhrase())
   self.typewriter = TextInput:new({ x = 0, y = 450 })
+
+  self.enemies = {
+    Enemy:new(sprites.enemies.dog),
+    Enemy:new(sprites.enemies.horse),
+    Enemy:new(sprites.enemies.pig),
+  }
+  self.current_enemy = 1
 
   self.state = "reloading"
   self.seconds = 0
@@ -22,23 +32,36 @@ function Duel:restart()
   self.timer = GameplaySystem:calculateTime()
   self.phrase = Text:new({ x = 0, y = 50 }, "phrase", "center", GameplaySystem:getPhrase())
   self.typewriter = TextInput:new({ x = 0, y = 450 })
+
+  if self.state == "win" then
+    self:cycleEnemy()
+  end
   self.state = "reloading"
 end
 
 function Duel:draw()
   if self.timer > 0 and self.state == "reloading" then
-    love.graphics.setColor(10 / 255, 46 / 255, 68 / 255, 0.5)
     love.graphics.setBackgroundColor(252 / 255, 255 / 255, 204 / 255, 1)
-    self.phrase:draw()
 
+    love.graphics.setColor(10 / 255, 46 / 255, 68 / 255, 0.5)
     love.graphics.printf(string.format("%.2f", self.timer), 0, 400, 800, "center")
+    self.phrase:draw()
 
     love.graphics.setColor(10 / 255, 46 / 255, 68 / 255)
     self.typewriter:draw()
+
+    love.graphics.setColor(255 / 255, 255 / 255, 255 / 255)
+    self.enemies[self.current_enemy]:draw("stand")
   elseif self.state == "win" then
+    love.graphics.setColor(10 / 255, 46 / 255, 68 / 255)
     love.graphics.printf("YOU WIN", 0, 400, 800, "center")
+    love.graphics.setColor(255 / 255, 255 / 255, 255 / 255)
+    self.enemies[self.current_enemy]:draw("win")
   elseif self.state == "lost" then
+    love.graphics.setColor(10 / 255, 46 / 255, 68 / 255)
     love.graphics.printf("GAME OVER", 0, 400, 800, "center")
+    love.graphics.setColor(255 / 255, 255 / 255, 255 / 255)
+    self.enemies[self.current_enemy]:draw("lost")
   end
 end
 
@@ -78,6 +101,10 @@ end
 
 function Duel:textinput(t)
   self.typewriter:append(t)
+end
+
+function Duel:cycleEnemy()
+  self.current_enemy = (self.current_enemy % 3) + 1
 end
 
 return Duel
